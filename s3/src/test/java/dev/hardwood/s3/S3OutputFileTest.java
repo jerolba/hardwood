@@ -5,7 +5,7 @@
  *
  *  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
  */
-package dev.hardwood.s3.internal;
+package dev.hardwood.s3;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,7 +36,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
-import dev.hardwood.s3.S3Credentials;
+import dev.hardwood.s3.internal.S3Api;
+import dev.hardwood.s3.internal.S3Xml;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -329,7 +330,7 @@ class S3OutputFileTest {
 
     @Test
     void rejectsAWriteBeyondTheLastPart() throws IOException {
-        long maximum = (long) PART_SIZE * S3OutputFile.MAX_PARTS;
+        long maximum = (long) PART_SIZE * S3Xml.MAX_PARTS;
         S3OutputFile.requireCapacity("s3://bucket/key", maximum - 10, 10, PART_SIZE);
 
         assertThatThrownBy(() -> S3OutputFile.requireCapacity("s3://bucket/key", maximum - 10, 11, PART_SIZE))
